@@ -1,0 +1,24 @@
+## Copyright (C) 2019 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
+## See the file COPYING for copying conditions.
+
+[Unit]
+Description=Load the tirdad kernel module (randomize TCP ISN generation)
+Documentation=https://github.com/Kicksecure/tirdad
+DefaultDependencies=no
+After=systemd-modules-load.service
+Before=sysinit.target network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+## Best-effort: an unsigned out-of-tree (DKMS) module cannot be loaded under
+## Secure Boot's kernel lockdown. Loading tirdad via modules-load.d instead made
+## systemd-modules-load.service fail there, marking the whole system degraded even
+## though this is expected. The '-' prefix keeps a failed modprobe from failing the
+## unit; systemcheck still reports tirdad's real loaded/not-loaded status. On a
+## non-Secure-Boot system tirdad loads exactly as before.
+ExecStart=-/sbin/modprobe tirdad
+
+[Install]
+WantedBy=sysinit.target
