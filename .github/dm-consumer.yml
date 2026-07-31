@@ -1,0 +1,20 @@
+## Copyright (C) 2026 - 2026 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
+## See the file COPYING for copying conditions.
+
+## AI-Assisted
+
+## Per-repo parameter overrides. Read at workflow runtime by the
+## reusable workflows in developer-meta-files. Top-level keys
+## mirror the consumer-template basename without the
+## 'consumer-' prefix.
+##
+## Spec:
+## https://github.com/org-ai-assisted/developer-meta-files/blob/master/agents/github-actions-consumer-templates.md
+
+codeql-cpp:
+  ## tirdad is an out-of-tree Linux kernel module. build-mode=manual
+  ## requires an actual kbuild compile so the CodeQL c-cpp extractor
+  ## traces module/tirdad.c. codeql-build.sh installs matching kernel
+  ## headers and drives the repo Makefile. No prepare-command: the
+  ## source uses clean '.c' names (no genmkfile '#tag' suffix).
+  build-command: "ci/codeql-build.sh"
