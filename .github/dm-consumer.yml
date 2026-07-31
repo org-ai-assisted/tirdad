@@ -18,3 +18,17 @@ codeql-cpp:
   ## headers and drives the repo Makefile. No prepare-command: the
   ## source uses clean '.c' names (no genmkfile '#tag' suffix).
   build-command: "ci/codeql-build.sh"
+
+coverity:
+  ## Coverity Scan project + the canonical repo allowed to submit
+  ## (mirror runs skip the heavy steps via the canonical-repos gate).
+  project-name: "org-ai-assisted-tirdad"
+  canonical-repos: "org-ai-assisted/tirdad"
+  ## tirdad is an out-of-tree kernel module: cov-build must wrap the
+  ## real kbuild compile or cov-int captures zero units (false green).
+  ## coverity-build.sh installs the same kernel headers as the CodeQL
+  ## lane, drives the repo Makefile under './cov-analysis/bin/cov-build
+  ## --dir cov-int', and hard-fails on a zero-unit capture. The kernel
+  ## header install lives inside the script (mirroring codeql-build.sh),
+  ## so no apt-packages key is needed here.
+  build-command: "ci/coverity-build.sh"
