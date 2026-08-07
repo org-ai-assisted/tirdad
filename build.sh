@@ -2,6 +2,8 @@
 
 ## For CodeQL autobuild
 
+## Keep the command trace: it is this script's diagnostic output.
+set -x
 set -o errexit
 set -o nounset
 set -o pipefail
