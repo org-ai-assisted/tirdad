@@ -15,11 +15,6 @@ include /usr/share/dpkg/buildflags.mk
 override_dh_installchangelogs:
 	dh_installchangelogs changelog.upstream upstream
 
-## The unit is debian/tirdad-dkms.tirdad-load.service; without --name,
-## dh_installsystemd looks for debian/tirdad-dkms.service and would ship nothing.
-override_dh_installsystemd:
-	dh_installsystemd --name tirdad-load
-
 override_dh_auto_build:
 	true
 
