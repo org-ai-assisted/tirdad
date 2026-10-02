@@ -43,7 +43,11 @@ RemainAfterExit=yes
 ## treats it as a critical issue (non-zero exit), which the release gate's
 ## systemcheck run turns red. So the per-module health signal lives in
 ## systemcheck, and this unit only governs systemd's degraded state.
-ExecStart=-/sbin/modprobe tirdad
+##
+## --use-blacklist honors an administrator "blacklist tirdad" in modprobe.d (an
+## explicit modprobe ignores the blacklist without it); that is the supported
+## opt-out for disabling tirdad.
+ExecStart=-/sbin/modprobe --use-blacklist tirdad
 
 [Install]
 WantedBy=sysinit.target
