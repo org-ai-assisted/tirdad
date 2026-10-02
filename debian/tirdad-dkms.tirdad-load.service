@@ -25,6 +25,14 @@ RemainAfterExit=yes
 ## non-fatal: the unit stays successful, so the system is not marked degraded.
 ## The load is still attempted on every boot, so tirdad loads normally, and
 ## under Secure Boot when the DKMS MOK is enrolled.
+##
+## "-" tolerates ANY load failure, not only Secure Boot rejection. That is
+## deliberate: the purpose is to keep the whole system from going degraded on
+## tirdad's account. A load failure is NOT concealed -- systemcheck's
+## check_tirdad_module reports tirdad as absent and, when Secure Boot is OFF,
+## treats it as a critical issue (non-zero exit), which the release gate's
+## systemcheck run turns red. So the per-module health signal lives in
+## systemcheck, and this unit only governs systemd's degraded state.
 ExecStart=-/sbin/modprobe tirdad
 
 [Install]
