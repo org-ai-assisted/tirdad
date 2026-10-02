@@ -1,0 +1,31 @@
+## Copyright (C) 2019 - 2026 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
+## See the file COPYING for copying conditions.
+
+[Unit]
+Description=Load tirdad kernel module (TCP ISN randomization)
+Documentation=https://www.kicksecure.com/wiki/Tirdad
+
+## tirdad is loaded here rather than via /usr/lib/modules-load.d/, which runs
+## through the strict systemd-modules-load.service: a single module there that
+## fails to load fails the whole service and marks the system degraded. Under
+## Secure Boot the unsigned out-of-tree tirdad module is rejected ("Key was
+## rejected by service") unless the DKMS MOK is enrolled, and that must not
+## degrade the system.
+
+DefaultDependencies=no
+After=systemd-modules-load.service
+## Must load before security-misc locks down kernel module loading.
+Before=harden-module-loading.service
+Before=sysinit.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+## The leading "-" makes a failed modprobe (e.g. Secure Boot rejection)
+## non-fatal: the unit stays successful, so the system is not marked degraded.
+## The load is still attempted on every boot, so tirdad loads normally, and
+## under Secure Boot when the DKMS MOK is enrolled.
+ExecStart=-/sbin/modprobe tirdad
+
+[Install]
+WantedBy=sysinit.target
