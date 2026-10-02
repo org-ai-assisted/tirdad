@@ -14,8 +14,18 @@ Documentation=https://www.kicksecure.com/wiki/Tirdad
 
 DefaultDependencies=no
 After=systemd-modules-load.service
-## Must load before security-misc locks down kernel module loading.
+## Load before the network comes up so TCP ISN randomization covers the first
+## connections. All network units (networking.service, systemd-networkd.service,
+## ifup@.service) are ordered After=systemd-sysctl.service, so ordering before it
+## places tirdad ahead of them -- the old modules-load.d entry loaded inside
+## systemd-modules-load.service, which was likewise before networking.
+Before=systemd-sysctl.service
+## Load before security-misc locks down kernel module loading.
 Before=harden-module-loading.service
+## Load before LKRG baselines the kernel, or LKRG sees tirdad's livepatch as
+## tampering and panics. (The module no longer loads via modules-load.d, so file
+## ordering no longer guarantees this.)
+Before=lkrg.service
 Before=sysinit.target
 
 [Service]
