@@ -32,3 +32,11 @@ coverity:
   ## header install lives inside the script (mirroring codeql-build.sh),
   ## so no apt-packages key is needed here.
   build-command: "ci/coverity-build.sh"
+
+dist-ai-tests:
+  ## tirdad-tests is a CBMC proof suite: it #includes the real
+  ## module/tirdad.c behind a kernel-header shim and proves the TCP ISN
+  ## hook invariants for all inputs (loop-free path, so exhaustive). cbmc
+  ## is the only non-default dependency; the driver is stdlib-only python3
+  ## (no helper-scripts), so no helper-scripts key.
+  apt-packages: "python3 cbmc"
